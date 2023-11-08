@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--элемент кнопки, по нажатию на которую, появится новый стилизованный элемент-->
+<button id="btn">
+    Add new element ?
+</button>
+
+<script>
+    const button = document.getElementById('btn'); // обращаемся к кнопке по id и сохраняем ее в константу для удобного обращения к ней
+    button.onclick = function () { // по нажатию на кнопку выполняется функция
+        const elem = document.createElement("h1"); // с помощью createElement создается элемент h1 и сохраняется в константу
+        elem.textContent = 'I\'m a stylish new element!'; // указываем текстовое содержимое нового элемента
+        // при помощи свойства style задаем элементу css-свойства:
+        elem.style.color = 'red'; // цвет текста красный
+        elem.style.border = '1px dashed black'; // рамка вокруг элемента толщиной в 1 пиксель пунктирной линией черного цвета
+        elem.style.boxShadow = '10px 15px 20px lightblue'; // тень, падающая от элемента светло-голубого цвета, толщиной в 15 пикселей, сдвинута вправо на 10 пикселей и размыта на 20 пикселей
+        elem.style.padding = '5px 20px'; // внутренние отступы от границы элемента равны по 5 пикселей сверху и снизу и по 20 пикселей справа и слева
+        document.body.append(elem); // вставляем получившийся элемент в конец тела страницы
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<!--в теге style прописываем стили для классов-->
+<style>
+/*для тега body указываем свойства: ширину и высоту по размеру экрана, элементы body делаем гибкими при помощи свойства flex, располагаем их по центру по вертикали */
+    body {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column
+    }
+/*для элементов с классом add-animation: при наведении мышью на элемент будет меняться курсор, также задаем плавность и время перехода элемента из одного состояния в другое */
+    .add-animation {
+        transition: transform 1s ease-in-out;
+        cursor: pointer;
+    }
+/*класс animate создан для того, чтобы добавлять его по нажатию к элементам, в свойство transform передаем функцию, которая будет поворачивать элемент на 180 градусов*/
+    .animate {
+        transform: rotate(180deg);
+    }
+</style>
+
+<body>
+<!--текстовая подсказка для пользователя, применяем к ней стили: размер текста 24 пикселя, толщина шрифта равна 600, внешний отступ снизу 40 пикселей-->
+<span style="font-size: 24px; font-weight: 600; margin-bottom: 40px">
+    Кликни по любому квадрату:
+</span>
+<!--все блоки div - элементы страницы, к которым будем применять стили с анимацией с классом add-animation-->
+<!--1 элемент - квадрат со сторонами по 150 пикселей, цвет фона - фиолетовый-->
+<div style="width: 150px; height: 150px; background-color: purple"
+     class="add-animation">
+</div>
+<!--2 элемент - квадрат со сторонами по 100 пикселей, цвет фона - зеленый, внешние отступы снизу и сверху по 40 пикселей-->
+<div style="width: 100px; height: 100px; background-color: green; margin: 40px 0"
+     class="add-animation">
+</div>
+<!--3 элемент - квадрат со сторонами по 200 пикселей, цвет фона - синий-->
+<div style="width: 200px; height: 200px; background-color: blue"
+     class="add-animation">
+</div>
+
+<script>
+    // находим на странице все элементы, к которым будет применяться анимация, по классу add-animation, и помещаем их в массив
+    const arrayOfSquares = document.querySelectorAll(".add-animation");
+    arrayOfSquares.forEach(function (square) { // при помощи метода forEach для каждого элемента массива (square) выполняем функцию
+        square.addEventListener('click', () => { // на каждый элемент square вешаем обработчик события клика
+            square.classList.toggle('animate'); // по клику на элемент пи помощи свойства toggle - добавляем к элементу класс animate, по клику же удаляем класс animate, для запуска анимации
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--кнопка, по нажатию на которую, будет появляться новый элемент на страницу-->
+<button id="add-btn">
+    Add template element ?
+</button>
+<!--тег template хранит в себе шаблон, по которому будут создаваться новые элементы -->
+<template id="template">
+    <h1>It's template element</h1>
+</template>
+
+<script>
+    const addBtn = document.getElementById('add-btn'); // получаем элемент кнопки по id и сохраняем его в константу
+    const template = document.getElementById('template'); // получаем элемент шаблона по id и сохраняем его в константу
+    addBtn.addEventListener('click', () => { // на элемент кнопки назначаем обработчик события клика. задаем операции, которые обработчик должен выполнить по клику
+        const cloneTemplate = template.content.cloneNode(true); // клонируем содержимое шаблона, чтобы можно было его переиспользовать несколько раз, сохраняем его в константу
+        document.body.append(cloneTemplate); // добавляем в конец тела документа клонированный шаблон
+    })
+</script>
+
+</body>
+</html>
