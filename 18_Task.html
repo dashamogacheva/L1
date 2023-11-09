@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--кнопка для очистки LocalStorage-->
+<button id="clear">
+    Очистить LocalStorage
+</button>
+<!--кнопка для измерения максимального объема LocalStorage-->
+<button id="check">
+    Измерить максимальный объем LocalStorage
+</button>
+</body>
+
+<script>
+// по id обращаемся к кнопкам на странице и сохраняем их в переменные для более удобного обращения к ним
+    const check = document.querySelector("#check");
+    const clear = document.querySelector("#clear");
+    // на кнопку очистки навешиваем слушатель клика, который выполнит очистку хранилища
+    clear.addEventListener('click', () => {
+        localStorage.clear(); // очищаем localStorage, выводим в консоль сообщение об очистке
+        console.log('Хранилище очищено');
+    })
+// функция заполнения localStorage
+    function fillLocalStorage() {
+        try { // используем конструкцию try-catch для заполнения хранилища
+            for (let i = 0; ; i++) { // при помощи бесконечного цикла заполняем localStorage рандомными ключами
+                localStorage.setItem(`${Math.random()}`, `${Math.random()}`);
+            }
+        } catch (e) { // в случае если заполнение невозможно больше - хранилище заполнено, выводим в консоль сообщение об этом
+            console.log('Хранилище заполнено')
+        }
+    }
+// на кнопку измерения навешиваем слушатель клика, который выполнит заполнение хранилища и измерит его объем в байтах
+    check.addEventListener('click', () => {
+        let totalSize = 0; // объявляем переменную, которая будет хранить информацию об объеме localStorage
+        fillLocalStorage(); // вызываем функцию заполнения localStorage
+        for (let key in localStorage) { // циклом проходим localStorage, в качестве итерации используем ключ key и делаем проверку
+            if (localStorage.hasOwnProperty(key)) { // если в localStorage хранится значение по ключу, то считаем totalSize
+                totalSize += localStorage.getItem(key).length * 2; // получаем из localStorage по ключу длину значения и умножаем ее на 2, тк на 1 символ приходится 2 байта, при каждой итерации увеличиваем totalSize на получившееся число
+            }
+        }
+        console.log('Общий размер localStorage в байтах:', totalSize); // по результатам вычислений выводим в консоль общий размер localStorage в байтах. Примерно во всех браузерах объем будет 5 Мбайт
+    })
+</script>
+</html>
