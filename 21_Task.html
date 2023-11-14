@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- кнопка, по нажатию на которую вычислится размер коллстэка-->
+<button id="btn">
+    Вычислить размер коллстэка
+</button>
+
+<script>
+    const btn = document.querySelector('#btn'); // в константу сохраняем по id кнопку для дальнейшего обращения к ней
+    let size; // создаем переменную, куда будем сохранять размер коллстэка
+    function incrementCount() { // функция увеличивает size на 1 при каждом вызове и рекурсивно вызывает саму себя для заполнения коллстэка
+        size++;
+        incrementCount();
+    }
+    function getSizeCallStack() { // с помощью try-catch запускается функция incrementCount и выполняется до тех пор, пока не будет поймана ошибка
+        try {
+            size = 0; // при нажатии на кнопку каждый раз size присваеваем 0, чтобы корректно считался размер и запускаем incrementCount
+            incrementCount(); // функция запускает incrementCount
+        } catch (e) { // если отлавливает ошибку в catch выводит в консоль размер коллстэка size
+            console.log('Размер колстэка вашего браузера равен', size);
+        }
+    }
+// по нажатии на кнопку - запускаем getSizeCallStack
+    btn.addEventListener('click', () => {
+        getSizeCallStack();
+    })
+</script>
+</body>
+</html>
