@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--стили для элементов-->
+    <style>
+        input {
+            width: 450px;
+            padding: 12px;
+            border: 1px solid grey;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+
+        body {
+            padding: 200px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #message {
+            display: none;
+        }
+
+        .invalid {
+            color: red;
+        }
+    </style>
+
+</head>
+<body>
+
+<!--форма ввода пароля-->
+<form>
+    <label for="pas" style="font-size: 20px; font-weight: 600">Придумайте пароль</label>
+    <div>
+        <input type="password" id="pas" required>
+    </div>
+</form>
+
+<!--блок с подсказками для пользователя как сделать пароль надежнее-->
+<div id="message">
+    <p id="length" class="invalid">
+        Пароль должен быть не менее 8 символов.
+    </p>
+    <p id="letter" class="invalid">
+        Пароль должен содержать хотя бы одну строчную латинскую букву.
+    </p>
+    <p id="capital" class="invalid">
+        Пароль должен содержать хотя бы одну заглавную латинскую букву.
+    </p>
+    <p id="number" class="invalid">
+        Пароль должен содержать хотя бы одну цифру.
+    </p>
+</div>
+
+<script>
+    // в константы сохраняем элементы с подсказками для дальнейшего обращения к ним
+    const pasInput = document.getElementById("pas");
+    const length = document.getElementById("length");
+    const letter = document.getElementById("letter");
+    const capital = document.getElementById("capital");
+    const number = document.getElementById("number");
+
+    // в константы сохраняем массивы строчных, заглавных букв и цифры, чтобы проверять вводимый пользователем пароль на наличие элементов из этих массивов
+    const lowerCaseLetters = /[a-z]/g;
+    const upperCaseLetters = /[A-Z]/g;
+    const numbers = /[0-9]/g;
+
+    // блок с подсказками отображается, когда курсор находится в поле инпут
+    pasInput.onfocus = function () {
+        document.getElementById("message").style.display = "block";
+    }
+
+    // блок с подсказками скрывается, когда курсор находится за пределами поля инпут
+    pasInput.onblur = function () {
+        document.getElementById("message").style.display = "none";
+    }
+
+    // функция валидации пароля запускается, когда пользователь что-то вводит в поле инпут, когда все подсказки будут скрыты - значит, пароль надежный
+    pasInput.onkeyup = function () {
+
+        // проверка на длину пароля, если длина меньше 8, то подсказка о длине пароля появляется, в противном случае скрывается
+        if (pasInput.value.length >= 8) {
+            length.style.display = 'none';
+        } else {
+            length.style.display = 'block';
+        }
+
+        // проверка на наличие в пароле строчных букв, если их нет, то подсказка появляется, в противном случае скрывается
+        if (pasInput.value.match(lowerCaseLetters)) {
+            letter.style.display = 'none';
+        } else {
+            letter.style.display = 'block';
+        }
+
+        // проверка на наличие в пароле заглавных букв, если их нет, то подсказка появляется, в противном случае скрывается
+        if (pasInput.value.match(upperCaseLetters)) {
+            capital.style.display = 'none';
+        } else {
+            capital.style.display = 'block';
+        }
+
+        // проверка на наличие в пароле цифр, если их нет, то подсказка появляется, в противном случае скрывается
+        if (pasInput.value.match(numbers)) {
+            number.style.display = 'none';
+        } else {
+            number.style.display = 'block';
+        }
+    }
+
+</script>
+
+</body>
+</html>
