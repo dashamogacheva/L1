@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--элемент содержит в себе скрипт, содержащий document.write -->
+<div id="elem">
+    1
+    <script>
+        document.write(document.getElementById('elem').innerHTML); // запись нового элемента div с id="elem" и рекурсивный вызов document.write при каждой записи
+    </script>
+</div>
+
+<script>
+    const elem = document.getElementById('elem').textContent; // запись в константу текста элемента div
+    let count = 0; // переменная счетчик
+    for (let i = 0; i < elem.length; i++) { // проходим по всей длине elem и увеличиваем счетчик на 1 если elem[i] равна 1
+        if (elem[i] === '1') {
+            count++;
+        }
+    }
+    alert('Количество возможных вызовов document.write() - ' + --count) // выводим count меньше на 1, чем получилось, так первая 1 - часть элемента div, а не вызова document.write
+</script>
+
+</body>
+</html>
