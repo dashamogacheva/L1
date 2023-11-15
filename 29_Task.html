@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--стили для тела страницы -->
+    <style>
+        body {
+            padding: 200px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-form {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<!--форма, из которой функция будет получать данные, введенные пользователем в input с id="input-field-->
+<form id="submit-form">
+    <label for="input-field" style="font-size: 20px; font-weight: 600">Введите любой текст</label>
+    <div class="input-form">
+        <input id="input-field">
+        <input type="submit" value="OK">
+    </div>
+</form>
+
+<script>
+    // в константы заносим элементы формы и поля ввода текста
+    const submitForm = document.getElementById('submit-form');
+    const inputField = document.getElementById("input-field");
+    // на форму навешиваем слушатель: по нажатию на кнопку ок или нажатию на enter вывод всплывающего окна
+    submitForm.addEventListener('submit', () => {
+        alert('Вы ввели ' + inputField.value)
+    })
+</script>
+
+</body>
+</html>
