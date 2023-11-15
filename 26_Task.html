@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--пример элементов страницы-->
+<div>
+    <h2>TEXT</h2>
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <div id="elemDiv">
+        <p>Text TExt</p>
+        <button>OK</button>
+    </div>
+</div>
+<div>
+    второй див
+</div>
+
+</body>
+
+<script>
+    const elemDiv = document.querySelector('#elemDiv'); // константа хранит элемент див с id="elemDiv" (для примера работы функции)
+    function enumChildNodes(node) { // функция принимает элемент, информацию о котором и его дочерних элементах нужно вывести в консоль
+        // если нам передали элемент
+        if (node && 1 === node.nodeType) {
+            // берем его первый дочерний узел
+            let child = node.firstChild;
+            // пока узлы не закончились
+            while (child) {
+                // если этот узел является элементом
+                if (1 === child.nodeType) {
+                    // выводим в консоль текст с информацией о том, что это за тег
+                    console.log('элемент ' + child.tagName);
+                    // рекурсивно перечисляем все дочерние узлы
+                    enumChildNodes(child);
+                }
+                // переходим к следующему узлу и далее в цикле проходим уже по нему и его дочерним узлам
+                child = child.nextSibling;
+            }
+        }
+    }
+    // перечисляем содержимое body : выведет в консоль все элементы страницы с их дочерними элементами
+    enumChildNodes(document.body)
+    // перечисляем содержимое elemDiv : выведет в консоль: элемент Р и элемент button
+    enumChildNodes(elemDiv);
+</script>
+
+</html>
