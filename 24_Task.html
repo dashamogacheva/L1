@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            border-width: 1px 1px 0;
+            background-color: #f7f7f7;
+        }
+
+        .content {
+            margin: 20px;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            outline: 1px solid #494a4f;
+            border-radius: 1px;
+            border: none;
+        }
+
+        .pagination button.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .hidden {
+            height: 1px;
+            overflow: hidden;
+            position: absolute;
+            white-space: nowrap;
+            width: 1px;
+        }
+
+    </style>
+</head>
+<body>
+
+<template id="template">
+    <tr>
+        <td data-name="fname">Arlesia</td>
+        <td data-name="lname">Curtis</td>
+        <td data-name="tel">(756)516-8573</td>
+        <td data-name="address">8492 Magna Ln</td>
+        <td data-name="city">Saltilo</td>
+        <td data-name="state">KY</td>
+        <td data-name="zip">56603</td>
+    </tr>
+</template>
+
+<article class="content">
+    <table>
+        <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Телефон</th>
+            <th>Адрес</th>
+            <th>Город</th>
+            <th>Штат</th>
+            <th>zip</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</article>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const content = document.querySelector('.content'); // в константу сохраняем таблицу, куда будут добавляться строки
+        const tbody = content.querySelector('tbody'); // в константу сохраняем таблицу, куда будут добавляться строки
+        let currentPage = 0; // переменная для текущей страницы
+        let items = []; // пустой массив, в котором будут храниться все ячейки таблицы
+        let data = []; // пустой массив, чтобы в дальнейшем сохранить в него json с данными для таблицы
+        const countOnePage = 50; // сколько отображаем на одной странице
+        const template = document.querySelector('#template'); // в константу сохраняем элемент-шаблон
+
+        async function getData() { // функция получает данные для заполнения таблицы
+            const fetchURL = `http://www.filltext.com/?rows=1000&fname=%7BfirstName%7D&lname=%7BlastName%7D&tel=%7Bphone%7Cformat%7D&address=%7BstreetAddress%7D&city=%7Bcity%7D&state=%7BusState%7Cabbr%7D&zip=%7Bzip%7D&pretty=true`;
+            try {
+                // отправляем запрос на сервер по адресу fetchURL, в качестве опций запроса указываем метод GET - значит, мы хотим получить данные
+                // получившийся ответ сохраняем в константу response
+                const response = await fetch(fetchURL, {
+                    method: 'GET',
+                    headers: {
+                        accept: 'application/json',
+                    },
+                });
+                if (response.ok) { // если статус ответа - успешно (ок), то ответ в формате json сохраняем в массив data и возвращаем его
+                    return data = await response.json();
+                }
+            } catch (err) { // иначе выводим в консоль сообщение об ошибке и возвращаем пустой массив
+                console.error(err);
+                return [];
+            }
+        }
+
+        getData().then(() => { // после выполнения функции getData, запускается функция paginationRender с массивом данных
+            tableRenderPage(data); // Вызов функции рендера таблицы.
+            items = Array.from(content.getElementsByTagName('tr')).slice(1); // сохраняем в items массив элементов строк таблицы, начиная с 1 строки
+            createPageButtons(); // Вызов функции рендера кнопок страницы.
+            showPage(currentPage); // Вызов функции вывода страницы по номеру страницы
+        });
+
+        function tableRenderPage(data) { //функция принимает массив и id страницы
+            for (let i = 0; i < data.length; i++) { // циклом проходим от нулевого элемента по всей длине нового массива
+                let cloneTemplate = template.content.cloneNode(true); // клонируем элемент шаблон
+                const tdArr = cloneTemplate.querySelectorAll("td"); // сохраняем массив элементов с классом td клонированного элемента
+                tdArr.forEach(td => { // для каждого элемента массива tdArr выполняем функцию
+                    td.textContent = data[i][td.dataset.name]; // в элемент td присваеваем значение элемента массива данных по значению атрибута данных из таблицы
+                })
+                tbody.append(cloneTemplate); // добавляем строку в конец таблицы
+            }
+        }
+        function createPageButtons() { // функцию создания кнопок пагинации
+            const totalPages = Math.ceil(items.length / countOnePage); // // кол-во страниц
+            const paginationContainer = document.createElement('div'); // создаем див для кнопок
+            const paginationDiv = document.body.appendChild(paginationContainer); // вставляем paginationContainer в конец тела страницы и сохраняем в константу
+            paginationContainer.classList.add('pagination'); // добавляем класс на для применения стилей
+            // добавление кнопок пагинации
+            for (let i = 0; i < totalPages; i++) { // в цикле проходим от 0 до количества страниц
+                const pageButton = document.createElement('button'); // создаем элемент кнопки
+                pageButton.textContent = i + 1; // добавляем к каждой кнопке текст с номером страниц
+                pageButton.addEventListener('click', () => { // навешиваем слушатель по клику
+                    currentPage = i; // в качестве текущей страницы сохраняем i
+                    showPage(currentPage); // вызываем функцию вывода страницы по текущему номеру страницы
+                    updateActiveButtonStates(); // вызываем функцию обновления кнопок пагинации для применения стилей на кнопки
+                });
+                content.appendChild(paginationContainer); // вставляем после таблицы контейнер пагинации
+                paginationDiv.appendChild(pageButton); // вставляем в блок див для пагинации кнопки
+            }
+        }
+        function showPage(page) { // функция принимает в себя номер страницы
+            const startIndex = page * countOnePage; // константа хранит в себе стартовый элемент таблицы, который высчитывается по количеству элементов на странице и номеру страницы
+            const endIndex = startIndex + countOnePage; // константа хранит в себе конечный элемент таблицы на странице, который высчитывается путем сложения стартового элемента и количества элементов на странице
+            items.forEach((item, index) => { // для каждого элемента item из массива по индексу добавляем или убираем класс hidden для скрытия лишних элементов таблицы
+                item.classList.toggle('hidden', index < startIndex || index >= endIndex); // сравниваем индекс с startIndex и endIndex
+            });
+            updateActiveButtonStates(); // вызываем функцию обновления состояния кнопок пагинации
+        }
+
+        function updateActiveButtonStates() { // функцию обновления кнопок пагинации
+            const pageButtons = document.querySelectorAll('.pagination button'); // сохраняем в массив все кнопки пагинации
+            pageButtons.forEach((button, index) => { // для каждой кнопки по индексу выполняем функцию
+                if (index === currentPage) { // если индекс равен номеру текущей страницы
+                    button.classList.add('active'); // добавляем к кнопке класс active
+                } else {
+                    button.classList.remove('active'); // иначе удаляем класс active у кнопки
+                }
+            });
+        }
+
+    });
+</script>
+</html>
