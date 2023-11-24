@@ -13,7 +13,7 @@ function jsonToString(json) {
         arr.push(value);
     }
     for (let key in json) { // перебираем все ключи в json и заполняем строку
-        str += `"${key}":"${arr[i]}",`;
+        str += `"${key}":"${arr[i]}", `;
         i++;
     }
     str += '}';
