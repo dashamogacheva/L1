@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 100px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 19px;
+            padding-bottom: 10px;
+        }
+
+        input {
+            height: 25px;
+            width: 250px;
+        }
+
+        #addressList {
+            display: none;
+            flex-direction: column;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+<h2>
+    Введите координаты
+</h2>
+<form id="oneForm">
+    <label for="one">
+        Долгота:
+    </label>
+    <input id="one">
+    <button type="submit">
+        OK
+    </button>
+</form>
+<form id="twoForm">
+    <label for="two">
+        Широта:
+    </label>
+    <input id="two">
+    <button type="submit">
+        OK
+    </button>
+</form>
+
+<div id="addressList">
+    <label for="address">
+        Выберите нужный адрес:
+    </label>
+    <input id="address" list="addresses">
+    <datalist id="addresses">
+
+    </datalist>
+</div>
+</body>
+<script>
+
+    const addressesList = document.getElementById('addresses'); // в константу сохраняем элемент списка, в который будут сохраняться адреса
+    const addressDiv = document.getElementById('addressList');
+    const address = document.getElementById('address');
+
+    const firstForm = document.getElementById('oneForm'); // в константы сохраняем формы для обращения к ним
+    const secondForm = document.getElementById('twoForm');
+    const firstInput = document.getElementById('one'); // в константы сохраняем поля ввода для обращения к ним
+    const secondInput = document.getElementById('two');
+
+    const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address"; // адрес апи сервера
+    const token = "42a4b0ad8bdf5a8e2d4c7753f18ad7d698e0119a";  // токен для авторизации апи
+    let query = {lat: 0, lon: 0}; // переменная, куда будут сохраняться координаты из инпутов для отправки запроса
+
+    firstForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        query.lon = firstInput.value;
+        checkQuery();
+    })
+
+    secondForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        query.lat = secondInput.value;
+        checkQuery();
+    })
+
+    function checkQuery() { // функция проверяет установлены ли значения долготы и широты и запускает функцию получения списка адресов по координатам
+        if (query.lat !== 0 && query.lon !== 0) {
+            getAddressesList(query).then(result => renderAddressList(result.suggestions));
+        }
+    }
+
+    async function getAddressesList(query) { // функция получения списка адресов с сервера по координатам
+        try {
+            // отправляем запрос на сервер по адресу url
+            // получившийся ответ сохраняем в константу response
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": "Token " + token
+                },
+                body: JSON.stringify(query) // в тело запроса передаем координаты
+            });
+            if (response.ok) { // если статус ответа - успешно (ок), то ответ в формате json сохраняем в массив data и возвращаем его
+                return await response.json();
+            }
+        } catch (err) { // иначе выводим в консоль сообщение об ошибке и возвращаем пустой массив
+            alert(err);
+            return [];
+        }
+    }
+
+    function removeOptionsAddressesList() {
+        let optionsArray = addressesList.querySelectorAll('option');
+        for (let i = 0; i < optionsArray.length; i++) {
+            optionsArray[i].remove();
+        }
+    }
+
+    function renderAddressList(arr) { // функция отрисовки в выпадающем списке адресов
+        removeOptionsAddressesList();
+        addressDiv.style.display = 'flex';
+        address.value = '';
+        for (let i = 0; i < arr.length; i++) { // проходим циклом по длине массива
+            let option = document.createElement('option'); // создаем элемент option для выпадающего списка
+            option.value = arr[i].value; // в качестве value для option - сохраняем значение элемента массива от i
+            addressesList.append(option); // вставляем option в конец списка
+        }
+    }
+
+</script>
+</html>

@@ -8,8 +8,7 @@ function resolveAfter2Seconds(num) {
 // ассинхронная функция с использованием await
 async function func() {
     // при помощи await запись в константу х осуществляется только после получения результата выполнения функции resolveAfter2Seconds
-    const x = await resolveAfter2Seconds(10);
-    console.log(x);
+    return await resolveAfter2Seconds(10);
 }
 
-func();
+func().then(result => console.log(result)); // 10
